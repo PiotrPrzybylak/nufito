@@ -1,2 +1,7 @@
 <h1>Choose a trainer</h1>
-<div>{{printf "%s" .V}}</div>
+
+<ul>
+{{range .V}}
+    <li>{{.}}</li>
+{{end}}
+</ul>
