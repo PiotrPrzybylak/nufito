@@ -9,7 +9,7 @@ import (
 	"net/http"
 	//"strings"
 	"fmt"
-
+	"html/template"
 	"net/url"
 
 	"golang.org/x/net/context"
@@ -38,6 +38,16 @@ func trainersHandler2(w http.ResponseWriter, r *http.Request) {
 }
 
 
+var templates = template.Must(template.ParseFiles("trainers.html"))
+
+func renderTemplate(w http.ResponseWriter, tmpl string, p *getTrainersResponse) {
+	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+
 func main() {
 	ctx := context.Background()
 
@@ -50,11 +60,11 @@ func main() {
 
 
 	trainersHandler :=  func (w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "<h1>Choose a trainer</h1>",)
 
 		trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
 		response, _ := trainersEndpoint(ctx, getTrainersRequest{})
-				fmt.Fprintf(w, "RESPONSE: %v",response)
+		res := response.(getTrainersResponse)
+		renderTemplate(w, "trainers", &res)
 	}
 
 
