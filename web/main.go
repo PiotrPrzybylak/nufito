@@ -28,18 +28,42 @@ func (nufitoService) GetTrainers() ([]string, error) {
 	return []string{"Marian", "Stefan", "Roman"}, nil
 }
 
+
+func trainersHandler2(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Choose a trainer</h1>",)
+
+	trainersEndpoint := makeTrainersEndpoint(nil, "http://localhost:8080/trainers")
+	trainersEndpoint(nil, getTrainersRequest{})
+
+}
+
+
 func main() {
 	ctx := context.Background()
 
-	trainersHandler := httptransport.NewServer(
-		ctx,
-		makeTrainersEndpoint(ctx, "http://localhost:8080/trainers"),
-		decodeGetTrainersRequest,
-		encodeResponse,
-	)
+	// trainersHandler := httptransport.NewServer(
+	// 	ctx,
+	// 	makeTrainersEndpoint(ctx, "http://localhost:8080/trainers"),
+	// 	decodeGetTrainersRequest,
+	// 	encodeResponse,
+	// )
 
-	http.Handle("/trainers", trainersHandler)
-	log.Fatal(http.ListenAndServe(":8081", nil))
+
+	trainersHandler :=  func (w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "<h1>Choose a trainer</h1>",)
+
+		trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
+		response, _ := trainersEndpoint(ctx, getTrainersRequest{})
+				fmt.Fprintf(w, "RESPONSE: %v",response)
+	}
+
+
+//  trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
+
+
+
+	http.HandleFunc("/trainers", trainersHandler)
+	log.Fatal(http.ListenAndServe(":8082", nil))
 }
 
 func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoint {
@@ -51,7 +75,7 @@ func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoin
 		"GET",
 		u,
 		encodeRequest,
-		decodeUppercaseResponse,
+		decodeGetTrainersResponse,
 	).Endpoint()
 }
 
