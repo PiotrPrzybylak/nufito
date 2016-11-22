@@ -22,21 +22,6 @@ type NufitoService interface {
 	GetTrainers() ([]string, error)
 }
 
-type nufitoService struct{}
-
-func (nufitoService) GetTrainers() ([]string, error) {
-	return []string{"Marian", "Stefan", "Roman"}, nil
-}
-
-
-func trainersHandler2(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Choose a trainer</h1>",)
-
-	trainersEndpoint := makeTrainersEndpoint(nil, "http://localhost:8080/trainers")
-	trainersEndpoint(nil, getTrainersRequest{})
-
-}
-
 
 var templates = template.Must(template.ParseFiles("trainers.html"))
 
@@ -51,14 +36,6 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *getTrainersResponse) 
 func main() {
 	ctx := context.Background()
 
-	// trainersHandler := httptransport.NewServer(
-	// 	ctx,
-	// 	makeTrainersEndpoint(ctx, "http://localhost:8080/trainers"),
-	// 	decodeGetTrainersRequest,
-	// 	encodeResponse,
-	// )
-
-
 	trainersHandler :=  func (w http.ResponseWriter, r *http.Request) {
 
 		trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
@@ -66,11 +43,6 @@ func main() {
 		res := response.(getTrainersResponse)
 		renderTemplate(w, "trainers", &res)
 	}
-
-
-//  trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
-
-
 
 	http.HandleFunc("/trainers", trainersHandler)
 	log.Fatal(http.ListenAndServe(":8082", nil))
