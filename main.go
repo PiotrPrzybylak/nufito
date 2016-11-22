@@ -13,7 +13,6 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-// StringService provides operations on strings.
 type NufitoService interface {
 	GetTrainers() (string, error)
 }
