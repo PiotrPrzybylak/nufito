@@ -14,13 +14,13 @@ import (
 )
 
 type NufitoService interface {
-	GetTrainers() (string, error)
+	GetTrainers() ([]string, error)
 }
 
 type nufitoService struct{}
 
-func (nufitoService) GetTrainers() (string, error) {
-	return "Marian, Stefan, Roman", nil
+func (nufitoService) GetTrainers() ([]string, error) {
+	return []string{"Marian", "Stefan", "Roman"}, nil
 }
 
 func main() {
@@ -67,7 +67,7 @@ type getTrainersRequest struct {
 }
 
 type uppercaseResponse struct {
-	V   string `json:"v"`
+	V   []string `json:"v"`
 	Err string `json:"err,omitempty"` // errors don't define JSON marshaling
 }
 
