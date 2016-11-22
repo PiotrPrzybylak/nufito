@@ -72,7 +72,7 @@ func encodeResponse(_ context.Context, w http.ResponseWriter, response interface
 type getTrainersRequest struct {
 }
 
-type uppercaseResponse struct {
+type getTrainersResponse struct {
 	V   []string `json:"v"`
 	Err string `json:"err,omitempty"` // errors don't define JSON marshaling
 }
@@ -91,8 +91,8 @@ func encodeRequest(_ context.Context, r *http.Request, request interface{}) erro
 	return nil
 }
 
-func decodeUppercaseResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response uppercaseResponse
+func decodeGetTrainersResponse(_ context.Context, r *http.Response) (interface{}, error) {
+	var response getTrainersResponse
 
 //	buf := new(bytes.Buffer)
 //	buf.ReadFrom(r.Body)
