@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"bitbucket.org/piotrp/nufito-prototype/shared"
 )
 
 func main() {
@@ -41,7 +42,7 @@ func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoin
 }
 
 func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request getTrainersRequest
+	var request shared.GetTrainersRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -50,14 +51,6 @@ func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, 
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
-}
-
-type getTrainersRequest struct {
-}
-
-type getTrainersResponse struct {
-	V   []string `json:"v"`
-	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
 
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
@@ -70,7 +63,7 @@ func encodeRequest(_ context.Context, r *http.Request, request interface{}) erro
 }
 
 func decodeGetTrainersResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response getTrainersResponse
+	var response shared.GetTrainersResponse
 
 	//	buf := new(bytes.Buffer)
 	//	buf.ReadFrom(r.Body)
