@@ -18,16 +18,6 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-type NufitoService interface {
-	GetTrainers() ([]string, error)
-}
-
-type nufitoService struct{}
-
-func (nufitoService) GetTrainers() ([]string, error) {
-	return []string{"Marian", "Stefan", "Roman"}, nil
-}
-
 func main() {
 	ctx := context.Background()
 
