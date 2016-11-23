@@ -1,19 +1,17 @@
 package main
 
 import (
+	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"encoding/json"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	httptransport "github.com/go-kit/kit/transport/http"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"golang.org/x/net/context"
 	"net/http"
 	"os"
-	//"strings"
-
-	"golang.org/x/net/context"
-
-	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
-
-	"bitbucket.org/piotrp/nufito-prototype/shared"
 )
 
 type NufitoService interface {
@@ -30,8 +28,30 @@ func main() {
 
 	logger := log.NewLogfmtLogger(os.Stderr)
 
+	fieldKeys := []string{"method", "error"}
+	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		Namespace: "nufito",
+		Subsystem: "trainers_service",
+		Name:      "request_count",
+		Help:      "Number of requests received.",
+	}, fieldKeys)
+	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "nufito",
+		Subsystem: "trainers_service",
+		Name:      "request_latency_microseconds",
+		Help:      "Total duration of requests in microseconds.",
+	}, fieldKeys)
+	countResult := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "nufito",
+		Subsystem: "trainers_service",
+		Name:      "count_result",
+		Help:      "The result of each count method.",
+	}, []string{}) // no fields here
+
 	ctx := context.Background()
-	svc := nufitoService{}
+	var svc NufitoService
+	svc = nufitoService{}
+	svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
 
 	trainersEndpoint := makeTrainersEndpoint(svc)
 	trainersEndpoint = loggingMiddleware(log.NewContext(logger).With("method", "getTrainers"))(trainersEndpoint)
@@ -44,6 +64,7 @@ func main() {
 	)
 
 	http.Handle("/trainers", trainersHandler)
+	http.Handle("/metrics", stdprometheus.Handler())
 	logger.Log("msg", "HTTP", "addr", ":8080")
 	logger.Log("err", http.ListenAndServe(":8080", nil))
 }
