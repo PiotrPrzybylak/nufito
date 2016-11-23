@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
@@ -60,9 +59,6 @@ type getTrainersResponse struct {
 	V   []string `json:"v"`
 	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
-
-// ErrEmpty is returned when an input string is empty.
-var ErrEmpty = errors.New("empty string")
 
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
 	var buf bytes.Buffer
