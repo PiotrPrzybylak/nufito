@@ -4,18 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/go-kit/kit/endpoint"
+	httptransport "github.com/go-kit/kit/transport/http"
+	"golang.org/x/net/context"
 	"io/ioutil"
 	"log"
 	"net/http"
-	//"strings"
-	"fmt"
-
 	"net/url"
-
-	"golang.org/x/net/context"
-
-	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 func main() {
