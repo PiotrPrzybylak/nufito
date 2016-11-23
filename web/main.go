@@ -3,19 +3,15 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
+	"github.com/go-kit/kit/endpoint"
+	httptransport "github.com/go-kit/kit/transport/http"
+	"golang.org/x/net/context"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
-	//"strings"
-	"fmt"
-	"html/template"
 	"net/url"
-
-	"golang.org/x/net/context"
-
-	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 type NufitoService interface {
@@ -80,9 +76,6 @@ type getTrainersResponse struct {
 	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
 
-// ErrEmpty is returned when an input string is empty.
-var ErrEmpty = errors.New("empty string")
-
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(request); err != nil {
@@ -98,9 +91,9 @@ func decodeGetTrainersResponse(_ context.Context, r *http.Response) (interface{}
 	//	buf := new(bytes.Buffer)
 	//	buf.ReadFrom(r.Body)
 	//	s := buf.String() // Does a complete copy of the bytes in the buffer.
-
 	// fmt.Print("s:")
 	// fmt.Println(s)
+
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		fmt.Print("err:")
 		fmt.Println(err)
