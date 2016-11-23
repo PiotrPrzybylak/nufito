@@ -36,9 +36,10 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *getTrainersResponse) 
 func main() {
 	ctx := context.Background()
 
+	trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
+
 	trainersHandler :=  func (w http.ResponseWriter, r *http.Request) {
 
-		trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
 		response, _ := trainersEndpoint(ctx, getTrainersRequest{})
 		res := response.(getTrainersResponse)
 		renderTemplate(w, "trainers", &res)
