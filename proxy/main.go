@@ -51,7 +51,7 @@ func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoin
 		"GET",
 		u,
 		encodeRequest,
-		decodeUppercaseResponse,
+		decodeGetTrainersResponse,
 	).Endpoint()
 }
 
