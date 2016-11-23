@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -11,7 +12,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"bitbucket.org/piotrp/nufito-prototype/shared"
 )
 
 func main() {

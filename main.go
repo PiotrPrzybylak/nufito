@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"log"
+	"github.com/go-kit/kit/log"
 	"net/http"
+	"os"
 	//"strings"
 
 	"golang.org/x/net/context"
@@ -26,18 +27,25 @@ func (nufitoService) GetTrainers() ([]string, error) {
 }
 
 func main() {
+
+	logger := log.NewLogfmtLogger(os.Stderr)
+
 	ctx := context.Background()
 	svc := nufitoService{}
 
+	trainersEndpoint := makeTrainersEndpoint(svc)
+	trainersEndpoint = loggingMiddleware(log.NewContext(logger).With("method", "getTrainers"))(trainersEndpoint)
+
 	trainersHandler := httptransport.NewServer(
 		ctx,
-		makeTrainersEndpoint(svc),
+		trainersEndpoint,
 		decodeGetTrainersRequest,
 		encodeResponse,
 	)
 
 	http.Handle("/trainers", trainersHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	logger.Log("msg", "HTTP", "addr", ":8080")
+	logger.Log("err", http.ListenAndServe(":8080", nil))
 }
 
 func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
