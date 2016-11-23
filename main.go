@@ -11,6 +11,8 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
+
+	"bitbucket.org/piotrp/nufito-prototype/shared"
 )
 
 type NufitoService interface {
@@ -43,14 +45,14 @@ func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
 		//req := request.(getTrainersRequest)
 		v, err := svc.GetTrainers()
 		if err != nil {
-			return getTrainersResponse{v, err.Error()}, nil
+			return shared.GetTrainersResponse{v, err.Error()}, nil
 		}
-		return getTrainersResponse{v, ""}, nil
+		return shared.GetTrainersResponse{v, ""}, nil
 	}
 }
 
 func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request getTrainersRequest
+	var request shared.GetTrainersRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -59,14 +61,6 @@ func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, 
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
-}
-
-type getTrainersRequest struct {
-}
-
-type getTrainersResponse struct {
-	V   []string `json:"v"`
-	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
 
 // ErrEmpty is returned when an input string is empty.
