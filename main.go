@@ -43,9 +43,9 @@ func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
 		//req := request.(getTrainersRequest)
 		v, err := svc.GetTrainers()
 		if err != nil {
-			return uppercaseResponse{v, err.Error()}, nil
+			return getTrainersResponse{v, err.Error()}, nil
 		}
-		return uppercaseResponse{v, ""}, nil
+		return getTrainersResponse{v, ""}, nil
 	}
 }
 
@@ -66,7 +66,7 @@ func encodeResponse(_ context.Context, w http.ResponseWriter, response interface
 type getTrainersRequest struct {
 }
 
-type uppercaseResponse struct {
+type getTrainersResponse struct {
 	V   []string `json:"v"`
 	Err string `json:"err,omitempty"` // errors don't define JSON marshaling
 }
