@@ -3,8 +3,8 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"errors"
+	"io/ioutil"
 	"log"
 	"net/http"
 	//"strings"
@@ -55,7 +55,6 @@ func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoin
 	).Endpoint()
 }
 
-
 func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request getTrainersRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -63,7 +62,6 @@ func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, 
 	}
 	return request, nil
 }
-
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
@@ -74,13 +72,11 @@ type getTrainersRequest struct {
 
 type getTrainersResponse struct {
 	V   []string `json:"v"`
-	Err string `json:"err,omitempty"` // errors don't define JSON marshaling
+	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
-
 
 // ErrEmpty is returned when an input string is empty.
 var ErrEmpty = errors.New("empty string")
-
 
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
 	var buf bytes.Buffer
@@ -94,9 +90,9 @@ func encodeRequest(_ context.Context, r *http.Request, request interface{}) erro
 func decodeGetTrainersResponse(_ context.Context, r *http.Response) (interface{}, error) {
 	var response getTrainersResponse
 
-//	buf := new(bytes.Buffer)
-//	buf.ReadFrom(r.Body)
-//	s := buf.String() // Does a complete copy of the bytes in the buffer.
+	//	buf := new(bytes.Buffer)
+	//	buf.ReadFrom(r.Body)
+	//	s := buf.String() // Does a complete copy of the bytes in the buffer.
 
 	// fmt.Print("s:")
 	// fmt.Println(s)
@@ -108,7 +104,6 @@ func decodeGetTrainersResponse(_ context.Context, r *http.Response) (interface{}
 
 	fmt.Print("response: ")
 	fmt.Println(response)
-
 
 	return response, nil
 }
