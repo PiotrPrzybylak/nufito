@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -14,13 +15,9 @@ import (
 	"net/url"
 )
 
-type NufitoService interface {
-	GetTrainers() ([]string, error)
-}
-
 var templates = template.Must(template.ParseFiles("trainers.html"))
 
-func renderTemplate(w http.ResponseWriter, tmpl string, p *getTrainersResponse) {
+func renderTemplate(w http.ResponseWriter, tmpl string, p *shared.GetTrainersResponse) {
 	err := templates.ExecuteTemplate(w, tmpl+".html", p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -34,8 +31,8 @@ func main() {
 
 	trainersHandler := func(w http.ResponseWriter, r *http.Request) {
 
-		response, _ := trainersEndpoint(ctx, getTrainersRequest{})
-		res := response.(getTrainersResponse)
+		response, _ := trainersEndpoint(ctx, shared.GetTrainersRequest{})
+		res := response.(shared.GetTrainersResponse)
 		renderTemplate(w, "trainers", &res)
 	}
 
@@ -57,7 +54,7 @@ func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoin
 }
 
 func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request getTrainersRequest
+	var request shared.GetTrainersRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -66,14 +63,6 @@ func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, 
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
-}
-
-type getTrainersRequest struct {
-}
-
-type getTrainersResponse struct {
-	V   []string `json:"v"`
-	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
 
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
@@ -86,7 +75,7 @@ func encodeRequest(_ context.Context, r *http.Request, request interface{}) erro
 }
 
 func decodeGetTrainersResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response getTrainersResponse
+	var response shared.GetTrainersResponse
 
 	//	buf := new(bytes.Buffer)
 	//	buf.ReadFrom(r.Body)
