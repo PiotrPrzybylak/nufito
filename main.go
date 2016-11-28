@@ -90,7 +90,6 @@ func main() {
 
 func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		//req := request.(getTrainersRequest)
 		v, err := svc.GetTrainers()
 		if err != nil {
 			return shared.GetTrainersResponse{V: v, Err: err.Error()}, nil
