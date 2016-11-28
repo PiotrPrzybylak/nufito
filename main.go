@@ -93,9 +93,9 @@ func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
 		//req := request.(getTrainersRequest)
 		v, err := svc.GetTrainers()
 		if err != nil {
-			return shared.GetTrainersResponse{v, err.Error()}, nil
+			return shared.GetTrainersResponse{V: v, Err: err.Error()}, nil
 		}
-		return shared.GetTrainersResponse{v, ""}, nil
+		return shared.GetTrainersResponse{V: v, Err: ""}, nil
 	}
 }
 
@@ -104,9 +104,9 @@ func makeAddTrainerEndpoint(svc NufitoService) endpoint.Endpoint {
 		req := request.(shared.AddTrainerRequest)
 		err := svc.AddTrainer(req.Name)
 		if err != nil {
-			return shared.AddTrainerResponse{err.Error()}, nil
+			return shared.AddTrainerResponse{Err: err.Error()}, nil
 		}
-		return shared.AddTrainerResponse{""}, nil
+		return shared.AddTrainerResponse{Err: ""}, nil
 	}
 }
 
