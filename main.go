@@ -1,17 +1,18 @@
 package main
 
 import (
-	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"os"
+
+	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	httptransport "github.com/go-kit/kit/transport/http"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/net/context"
-	"net/http"
-	"os"
 )
 
 type NufitoService interface {
@@ -22,7 +23,7 @@ type nufitoService struct {
 	Trainers []string
 }
 
-func (svc nufitoService) GetTrainers() ([]string, error) {
+func (svc *nufitoService) GetTrainers() ([]string, error) {
 	return svc.Trainers, nil
 }
 
@@ -51,7 +52,7 @@ func main() {
 	}, []string{}) // no fields here
 
 	ctx := context.Background()
-	var svc NufitoService = nufitoService{Trainers: []string{"Marian", "Stefan", "Roman"}}
+	var svc NufitoService = &nufitoService{Trainers: []string{"Marian", "Stefan", "Roman"}}
 	svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
 
 	trainersEndpoint := makeTrainersEndpoint(svc)
