@@ -17,6 +17,7 @@ import (
 
 type NufitoService interface {
 	GetTrainers() ([]string, error)
+	AddTrainer(string) error
 }
 
 type nufitoService struct {
@@ -25,6 +26,11 @@ type nufitoService struct {
 
 func (svc *nufitoService) GetTrainers() ([]string, error) {
 	return svc.Trainers, nil
+}
+
+func (svc *nufitoService) AddTrainer(trainer string) error {
+	svc.Trainers = append(svc.Trainers, trainer)
+	return nil
 }
 
 func main() {
@@ -65,6 +71,17 @@ func main() {
 		encodeResponse,
 	)
 
+	addTrainerEndpoint := makeAddTrainerEndpoint(svc)
+	addTrainerEndpoint = loggingMiddleware(log.NewContext(logger).With("method", "AddTrainer"))(addTrainerEndpoint)
+
+	addTrainerHandler := httptransport.NewServer(
+		ctx,
+		addTrainerEndpoint,
+		decodeAddTrainerRequest,
+		encodeResponse,
+	)
+
+	http.Handle("/trainers/add", addTrainerHandler)
 	http.Handle("/trainers", trainersHandler)
 	http.Handle("/metrics", stdprometheus.Handler())
 	logger.Log("msg", "HTTP", "addr", ":8080")
@@ -82,8 +99,27 @@ func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
 	}
 }
 
+func makeAddTrainerEndpoint(svc NufitoService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(shared.AddTrainerRequest)
+		err := svc.AddTrainer(req.Name)
+		if err != nil {
+			return shared.AddTrainerResponse{err.Error()}, nil
+		}
+		return shared.AddTrainerResponse{""}, nil
+	}
+}
+
 func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request shared.GetTrainersRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return nil, err
+	}
+	return request, nil
+}
+
+func decodeAddTrainerRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request shared.AddTrainerRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
