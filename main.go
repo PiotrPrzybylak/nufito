@@ -18,10 +18,12 @@ type NufitoService interface {
 	GetTrainers() ([]string, error)
 }
 
-type nufitoService struct{}
+type nufitoService struct {
+	Trainers []string
+}
 
-func (nufitoService) GetTrainers() ([]string, error) {
-	return []string{"Marian", "Stefan", "Roman"}, nil
+func (svc nufitoService) GetTrainers() ([]string, error) {
+	return svc.Trainers, nil
 }
 
 func main() {
@@ -49,8 +51,7 @@ func main() {
 	}, []string{}) // no fields here
 
 	ctx := context.Background()
-	var svc NufitoService
-	svc = nufitoService{}
+	var svc NufitoService = nufitoService{Trainers: []string{"Marian", "Stefan", "Roman"}}
 	svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
 
 	trainersEndpoint := makeTrainersEndpoint(svc)
