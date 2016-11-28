@@ -53,18 +53,6 @@ func makeTrainersEndpoint(ctx context.Context, proxyURL string) endpoint.Endpoin
 	).Endpoint()
 }
 
-func decodeGetTrainersRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request shared.GetTrainersRequest
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
-	}
-	return request, nil
-}
-
-func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
-}
-
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(request); err != nil {
