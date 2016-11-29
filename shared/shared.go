@@ -15,3 +15,8 @@ type AddTrainerRequest struct {
 type AddTrainerResponse struct {
 	Err string `json:"err,omitempty"` // errors don't define JSON marshaling
 }
+
+type NufitoService interface {
+	GetTrainers() ([]string, error)
+	AddTrainer(string) error
+}

@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/metrics"
+	"github.com/piotrprz/nufito/shared"
 )
 
 type instrumentingMiddleware struct {
 	requestCount   metrics.Counter
 	requestLatency metrics.Histogram
 	countResult    metrics.Histogram
-	next           NufitoService
+	next           shared.NufitoService
 }
 
 func (mw instrumentingMiddleware) GetTrainers() (output []string, err error) {

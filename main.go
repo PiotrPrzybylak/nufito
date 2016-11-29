@@ -10,15 +10,11 @@ import (
 	"github.com/go-kit/kit/log"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/piotrprz/nufito/db"
 	"github.com/piotrprz/nufito/shared"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/net/context"
 )
-
-type NufitoService interface {
-	GetTrainers() ([]string, error)
-	AddTrainer(string) error
-}
 
 type nufitoService struct {
 	Trainers []string
@@ -58,7 +54,9 @@ func main() {
 	}, []string{}) // no fields here
 
 	ctx := context.Background()
-	var svc NufitoService = &nufitoService{Trainers: []string{"Marian", "Stefan", "Roman"}}
+	// var svc NufitoService = &nufitoService{Trainers: []string{"Marian", "Stefan", "Roman"}}
+	var svc shared.NufitoService = db.NewService()
+
 	svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
 
 	trainersEndpoint := makeTrainersEndpoint(svc)
@@ -88,7 +86,7 @@ func main() {
 	logger.Log("err", http.ListenAndServe(":8080", nil))
 }
 
-func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
+func makeTrainersEndpoint(svc shared.NufitoService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		v, err := svc.GetTrainers()
 		if err != nil {
@@ -98,7 +96,7 @@ func makeTrainersEndpoint(svc NufitoService) endpoint.Endpoint {
 	}
 }
 
-func makeAddTrainerEndpoint(svc NufitoService) endpoint.Endpoint {
+func makeAddTrainerEndpoint(svc shared.NufitoService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(shared.AddTrainerRequest)
 		err := svc.AddTrainer(req.Name)

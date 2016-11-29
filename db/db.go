@@ -1,14 +1,21 @@
-package main
+package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
+	"github.com/piotrprz/nufito/shared"
 )
 
-func main() {
+func NewService() shared.NufitoService {
+	return &nufitoService{}
+}
+
+type nufitoService struct {
+}
+
+func (svc nufitoService) GetTrainers() ([]string, error) {
 	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
@@ -18,8 +25,7 @@ func main() {
 	//	rows, err := db.Query("SELECT name FROM users WHERE age = $1", age)
 	rows, err := db.Query("SELECT * FROM trainers")
 
-	fmt.Println(rows)
-	fmt.Println(err)
+	trainers := []string{}
 
 	var (
 		id   int
@@ -32,7 +38,7 @@ func main() {
 		if err1 != nil {
 			log.Fatal(err1)
 		}
-		log.Println(id, name)
+		trainers = append(trainers, name)
 
 	}
 	err = rows.Err()
@@ -40,4 +46,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	return trainers, nil
+}
+
+func (svc *nufitoService) AddTrainer(trainer string) error {
+	//	svc.Trainers = append(svc.Trainers, trainer)
+	return nil
 }
