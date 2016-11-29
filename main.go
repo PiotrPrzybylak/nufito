@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"os"
 
-	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/piotrprz/nufito/shared"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/net/context"
 )
@@ -24,7 +24,7 @@ type nufitoService struct {
 	Trainers []string
 }
 
-func (svc *nufitoService) GetTrainers() ([]string, error) {
+func (svc nufitoService) GetTrainers() ([]string, error) {
 	return svc.Trainers, nil
 }
 

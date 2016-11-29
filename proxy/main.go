@@ -1,17 +1,18 @@
 package main
 
 import (
-	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
-	"golang.org/x/net/context"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/go-kit/kit/endpoint"
+	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/piotrprz/nufito/shared"
+	"golang.org/x/net/context"
 )
 
 func main() {

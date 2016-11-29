@@ -1,18 +1,19 @@
 package main
 
 import (
-	"bitbucket.org/piotrp/nufito-prototype/shared"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
-	"golang.org/x/net/context"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/go-kit/kit/endpoint"
+	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/piotrprz/nufito/shared"
+	"golang.org/x/net/context"
 )
 
 var templates = template.Must(template.ParseFiles("trainers.html"))
