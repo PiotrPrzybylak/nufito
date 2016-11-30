@@ -1,0 +1,8 @@
+weba:
+  image: piotrprzybylak/nufito-prod
+  expose:
+    - 8080
+  ports:
+    - "8080:8080"
+  net:
+     "host"
