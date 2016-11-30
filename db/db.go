@@ -16,7 +16,7 @@ type nufitoService struct {
 }
 
 func (svc nufitoService) GetTrainers() ([]string, error) {
-	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword sslmode=disable")
+	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword host=db sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
