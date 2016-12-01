@@ -17,6 +17,7 @@ type nufitoService struct {
 
 func (svc nufitoService) GetTrainers() ([]string, error) {
 	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword host=db sslmode=disable")
+	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,6 +51,30 @@ func (svc nufitoService) GetTrainers() ([]string, error) {
 }
 
 func (svc *nufitoService) AddTrainer(trainer string) error {
-	//	svc.Trainers = append(svc.Trainers, trainer)
+	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword host=db sslmode=disable")
+	defer db.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stmt, err := db.Prepare("INSERT INTO trainers(name) VALUES($1)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, err := stmt.Exec(trainer)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// lastId, err := res.LastInsertId()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	rowCnt, err := res.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// log.Printf("ID = %d, affected = %d\n", lastId, rowCnt)
+	log.Printf("affected = %d\n", rowCnt)
+
 	return nil
 }
