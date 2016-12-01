@@ -57,7 +57,7 @@ func (svc *nufitoService) AddTrainer(trainer string) error {
 		log.Fatal(err)
 	}
 
-	stmt, err := db.Prepare("INSERT INTO trainers(name) VALUES($1)")
+	stmt, err := db.Prepare("INSERT INTO trainers(name) VALUES($1) RETURNING id as LastInsertId;")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,6 +65,7 @@ func (svc *nufitoService) AddTrainer(trainer string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Does not work in pg driver :(
 	// lastId, err := res.LastInsertId()
 	// if err != nil {
 	// 	log.Fatal(err)
