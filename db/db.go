@@ -9,22 +9,23 @@ import (
 )
 
 func NewService() shared.NufitoService {
-	return &nufitoService{}
-}
-
-type nufitoService struct {
-}
-
-func (svc nufitoService) GetTrainers() ([]string, error) {
 	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword host=db sslmode=disable")
-	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
+	return &nufitoService{db: db}
+}
 
-	// age := 21
-	//	rows, err := db.Query("SELECT name FROM users WHERE age = $1", age)
-	rows, err := db.Query("SELECT * FROM trainers")
+type nufitoService struct {
+	db *sql.DB
+}
+
+func (svc nufitoService) GetTrainers() ([]string, error) {
+	rows, err := svc.db.Query("SELECT * FROM trainers")
+	defer rows.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	trainers := []string{}
 
@@ -33,7 +34,6 @@ func (svc nufitoService) GetTrainers() ([]string, error) {
 		name string
 	)
 
-	defer rows.Close()
 	for rows.Next() {
 		err1 := rows.Scan(&id, &name)
 		if err1 != nil {
@@ -51,13 +51,8 @@ func (svc nufitoService) GetTrainers() ([]string, error) {
 }
 
 func (svc *nufitoService) AddTrainer(trainer string) error {
-	db, err := sql.Open("postgres", "user=nufito dbname=nufito password=mysecretpassword host=db sslmode=disable")
-	defer db.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	stmt, err := db.Prepare("INSERT INTO trainers(name) VALUES($1) RETURNING id as LastInsertId;")
+	stmt, err := svc.db.Prepare("INSERT INTO trainers(name) VALUES($1) RETURNING id as LastInsertId;")
 	if err != nil {
 		log.Fatal(err)
 	}
