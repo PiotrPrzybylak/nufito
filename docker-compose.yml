@@ -12,7 +12,7 @@ services:
   db:
     image: postgres
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - ~/work/data/nufito_db/db_data:/var/lib/postgresql/data
     expose:
       - 5432
     ports:
