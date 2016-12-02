@@ -6,6 +6,9 @@ RUN mkdir /app
 # Copy the application files (needed for production)
 ADD web /app/web
 ADD trainers.html /app/trainers.html
+ADD static /app/static
+
+
 
 #ADD views /app/views
 #ADD conf /app/conf
