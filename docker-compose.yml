@@ -1,17 +1,19 @@
-weba:
-  build: .
-  expose:
-    - 8080
-  ports:
-    - "8080:8080"
-  links:
-    - db
+version: '2'
+services:
+  weba:
+    build: .
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    links:
+      - db
 
-db:
-  image: postgres
-  volumes:
-    - ./db_data:/var/lib/postgresql/data
-  expose:
-    - 5432
-  ports:
-    - "1234:5432"
+  db:
+    image: postgres
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - "1234:5432"
