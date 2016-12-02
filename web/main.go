@@ -45,8 +45,13 @@ func main() {
 		http.Redirect(w, r, "trainers", 301)
 	}
 
+	indexHandler := func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "trainers", 301)
+	}
+
 	http.HandleFunc("/trainers", trainersHandler)
 	http.HandleFunc("/add-trainer", addTrainerHandler)
+	http.HandleFunc("/", indexHandler)
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
