@@ -27,11 +27,10 @@ func (svc nufitoService) GetTrainers() ([]string, error) {
 		log.Fatal(err)
 	}
 
-	trainers := []string{}
-
 	var (
-		id   int
-		name string
+		trainers = []string{}
+		id       int
+		name     string
 	)
 
 	for rows.Next() {
