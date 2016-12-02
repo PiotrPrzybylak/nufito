@@ -1,13 +1,11 @@
 version: '2'
 services:
-  weba:
+  backend:
     build: .
     expose:
       - 8080
     ports:
       - "8080:8080"
-    links:
-      - db
 
   db:
     image: postgres
