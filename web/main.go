@@ -28,7 +28,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *shared.GetTrainersRes
 func main() {
 	ctx := context.Background()
 
-	trainersEndpoint := makeTrainersEndpoint(ctx, "http://localhost:8080/trainers")
+	trainersEndpoint := makeTrainersEndpoint(ctx, "http://backend:8080/trainers")
 
 	trainersHandler := func(w http.ResponseWriter, r *http.Request) {
 
