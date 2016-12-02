@@ -38,6 +38,10 @@ func main() {
 	}
 
 	http.HandleFunc("/trainers", trainersHandler)
+
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/", fs)
+
 	log.Fatal(http.ListenAndServe(":8082", nil))
 }
 
