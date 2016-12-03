@@ -88,11 +88,11 @@ func main() {
 
 func makeTrainersEndpoint(svc shared.NufitoService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		v, err := svc.GetTrainers()
+		trainers, err := svc.GetTrainers()
 		if err != nil {
-			return shared.GetTrainersResponse{V: v, Err: err.Error()}, nil
+			return shared.GetTrainersResponse{Trainers: trainers, Err: err.Error()}, nil
 		}
-		return shared.GetTrainersResponse{V: v, Err: ""}, nil
+		return shared.GetTrainersResponse{Trainers: trainers, Err: ""}, nil
 	}
 }
 

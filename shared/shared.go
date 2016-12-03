@@ -4,8 +4,8 @@ type GetTrainersRequest struct {
 }
 
 type GetTrainersResponse struct {
-	V   []string `json:"v"`
-	Err string   `json:"err,omitempty"` // errors don't define JSON marshaling
+	Trainers []string `json:"trainers"`
+	Err      string   `json:"err,omitempty"` // errors don't define JSON marshaling
 }
 
 type AddTrainerRequest struct {
