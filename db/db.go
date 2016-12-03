@@ -20,7 +20,7 @@ type nufitoService struct {
 	db *sql.DB
 }
 
-func (svc nufitoService) GetTrainers() ([]string, error) {
+func (svc nufitoService) GetTrainers() ([]shared.Trainer, error) {
 	rows, err := svc.db.Query("SELECT * FROM trainers")
 	defer rows.Close()
 	if err != nil {
@@ -28,8 +28,8 @@ func (svc nufitoService) GetTrainers() ([]string, error) {
 	}
 
 	var (
-		trainers = []string{}
-		id       int
+		trainers = []shared.Trainer{}
+		id       string
 		name     string
 	)
 
@@ -38,7 +38,8 @@ func (svc nufitoService) GetTrainers() ([]string, error) {
 		if err1 != nil {
 			log.Fatal(err1)
 		}
-		trainers = append(trainers, name)
+		trainer := shared.Trainer{Name: name, Id: id}
+		trainers = append(trainers, trainer)
 
 	}
 	err = rows.Err()

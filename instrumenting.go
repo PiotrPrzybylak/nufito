@@ -15,7 +15,7 @@ type instrumentingMiddleware struct {
 	next           shared.NufitoService
 }
 
-func (mw instrumentingMiddleware) GetTrainers() (output []string, err error) {
+func (mw instrumentingMiddleware) GetTrainers() (output []shared.Trainer, err error) {
 	defer func(begin time.Time) {
 		lvs := []string{"method", "getTrainers", "error", fmt.Sprint(err != nil)}
 		mw.requestCount.With(lvs...).Add(1)
